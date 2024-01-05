@@ -1,28 +1,21 @@
 export function calculateTime(deliveries: string[]) {
-  let seconds = -(7 * 3600)
+  const totalDuration = deliveries.reduce((acc, duration) => {
+    const [hours, minutes, seconds] = duration.split(':').map(Number);
+    acc += hours * 3600 + minutes * 60 + seconds;
+    return acc;
+  }, 0);
 
-  for (const delivery of deliveries) {
-    const [hours, minutes, secs] = delivery.split(':')
-    seconds += +hours * 3600 + +minutes * 60 + +secs
-  }
+  const remainingTime = 7 * 3600 - totalDuration;
 
-  const sign = seconds < 0 ? '-' : ''
+  const sign = remainingTime > 0 ? '-' : '';
+  const absRemainingTime = Math.abs(remainingTime);
 
-  seconds = Math.abs(seconds)
+  const hours = Math.floor(absRemainingTime / 3600);
+  const minutes = Math.floor((absRemainingTime % 3600) / 60);
+  const seconds = absRemainingTime % 60;
 
-  const hours = Math.floor(seconds / 3600)
-    .toString()
-    .padStart(2, '0')
-
-  seconds %= 3600
-
-  const minutes = Math.floor(seconds / 60)
-    .toString()
-    .padStart(2, '0')
-
-  seconds %= 60
-
-  const secs = seconds.toString().padStart(2, '0')
-
-  return `${sign}${hours}:${minutes}:${secs}`
+  return `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
+    2,
+    '0'
+  )}`;
 }
