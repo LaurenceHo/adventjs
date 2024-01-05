@@ -1,15 +1,25 @@
 export function maxDistance(movements: string) {
-  let maxLeft = 0
-  let maxRight = 0
+  const movementArray = movements.split('');
+  let moveRight = 0;
+  let moveLeft = 0;
+  let move = 0;
 
-  for (const movement of movements) {
-    const rightPoint = +(movement === '>')
-    const leftPoint = +(movement === '<')
-    const extraPoint = +(movement === '*')
+  movementArray.forEach((m) => {
+    if (m === '>') {
+      moveRight++;
+    } else if (m === '<') {
+      moveLeft++;
+    } else if (m === '*') {
+      move++;
+    }
+  });
 
-    maxRight += rightPoint - leftPoint + extraPoint
-    maxLeft += leftPoint - rightPoint + extraPoint
+  let distance = moveRight - moveLeft;
+  if (distance >= 0) {
+    distance = distance + move;
+  } else {
+    distance = Math.abs(distance - move);
   }
 
-  return Math.max(maxLeft, maxRight)
+  return distance;
 }
