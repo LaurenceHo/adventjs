@@ -1,17 +1,22 @@
 export function adjustLights(lights: string[]) {
-  const start = lights[0]
-  const colors = ['🟢', '🔴']
-  const isStartColorGreen = lights[0] === '🟢'
-  const next = colors[+isStartColorGreen]
-
-  let count = 0
-  let index = 0
-
-  for (const light of lights) {
-    const values = [light !== start, light !== next]
-
-    count += +values[index++ % 2]
+  const cloneLights = [...lights];
+  const reverseLights = [...cloneLights].reverse();
+  const redLight = '🔴';
+  const greenLight = '🟢';
+  let count = 0;
+  for (let i = 0; i < cloneLights.length; i++) {
+    if (cloneLights[i] === cloneLights[i + 1]) {
+      cloneLights[i + 1] = cloneLights[i] === redLight ? greenLight : redLight;
+      count++;
+    }
   }
 
-  return Math.min(lights.length - count, count)
+  let countReverse = 0;
+  for (let i = 0; i < reverseLights.length; i++) {
+    if (reverseLights[i] === reverseLights[i + 1]) {
+      reverseLights[i + 1] = reverseLights[i] === redLight ? greenLight : redLight;
+      countReverse++;
+    }
+  }
+  return count > countReverse ? countReverse : count;
 }
