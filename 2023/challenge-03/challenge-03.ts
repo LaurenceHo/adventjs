@@ -1,13 +1,14 @@
 export function findNaughtyStep(original: string, modified: string) {
-  const originalLen = original.length
-  const modifiedLen = modified.length
+  if (original === modified) {
+    return '';
+  } else {
+    const originalArray = [...original].sort();
+    const modifiedArray = [...modified].sort();
 
-  const sequences = {
-    [originalLen]: [original, modified],
-    [modifiedLen]: [modified, original],
+    if (originalArray.length > modifiedArray.length) {
+      return originalArray.find((char, i) => char !== modifiedArray[i]);
+    } else {
+      return modifiedArray.find((char, i) => char !== originalArray[i]);
+    }
   }
-
-  const [steps, reference] = sequences[Math.max(originalLen, modifiedLen)]
-
-  return [...steps].find((step, index) => step !== reference[index]) ?? ''
 }
