@@ -1,21 +1,30 @@
 export function createChristmasTree(ornaments: string, height: number) {
-  let result = ''
-  const spaces = ' '.repeat(height - 1)
+  let ornamentsArray = ornaments.split('');
+  let result = '';
 
-  const ornamentsArray = [...ornaments.repeat(height)].join(' ')
-  let currentPosition = 0
+  const getOrnamentString = (ornaments: string, row: number) => {
+    let ornamentString = '';
 
-  for (const index of new Array(height).keys()) {
-    const length = index + 1
-    const total = currentPosition + length
+    for (let i = 0; i < row; i++) {
+      if (ornamentsArray.length === 0) {
+        ornamentsArray = ornaments.split('');
+      }
+      const ornament = ornamentsArray.shift();
+      ornamentString += ornament + ' ';
+    }
 
-    result +=
-      spaces.slice(index) +
-      ornamentsArray.slice(currentPosition * 2, total * 2 - 1) +
-      '\n'
+    return ornamentString.trim(); // Remove trailing space
+  };
 
-    currentPosition = total % ornaments.length
+  for (let i = 1; i <= height; i++) {
+    const ornamentString = getOrnamentString(ornaments, i);
+    const spaces = ' '.repeat(height - i);
+    result += `${spaces}${ornamentString}\n`;
   }
 
-  return result + spaces + '|\n'
+  // Trunk
+  const trunkSpaces = ' '.repeat(height - 1);
+  result += `${trunkSpaces}|\n`;
+
+  return result;
 }
