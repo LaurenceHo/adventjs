@@ -1,30 +1,42 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 export function travelDistance(map: string) {
-  const roadmapArr = map.split('\n')
-  const roadmap = roadmapArr.join('')
-  const cols = roadmapArr[0].length
-  const santaPos = roadmap.indexOf('S')
+  const isNumber = (value: string) => {
+    const digitRegex = /^\d$/;
+    return digitRegex.test(value);
+  };
 
-  let gift = 1
-  let movements = 0
-  let santaCol = santaPos % cols
-  let santaRow = Math.floor(santaPos / cols)
-
-  const numbers = roadmap.replace(/\.|S/g, '')
-
-  for (const _number of numbers) {
-    const giftPos = roadmap.indexOf(`${gift}`)
-    const giftCol = giftPos % cols
-    const giftRow = Math.floor(giftPos / cols)
-
-    movements += Math.abs(santaRow - giftRow) + Math.abs(santaCol - giftCol)
-
-    santaCol = giftCol
-    santaRow = giftRow
-
-    gift++
+  const childrenLocation = [];
+  let row = 0;
+  let column = 0;
+  for (let i = 0; i < map.length; i++) {
+    const road = map[i];
+    const testIsNumber = isNumber(road);
+    if (road === '\n' || i === map.length - 1) {
+      if (i === map.length - 1) {
+        if (testIsNumber || road === 'S') {
+          childrenLocation.push([road, [row, column]]);
+        }
+      }
+      row++;
+      column = 0;
+    } else {
+      if (testIsNumber || road === 'S') {
+        childrenLocation.push([road, [row, column]]);
+      }
+      column++;
+    }
+  }
+  const sortedLocation = childrenLocation.sort();
+  sortedLocation.unshift(sortedLocation[sortedLocation.length - 1]);
+  sortedLocation.pop();
+  let distance = 0;
+  for (let i = 0; i < sortedLocation.length - 1; i++) {
+    const currentLocation = sortedLocation[i][1];
+    const nextLocation = sortedLocation[i + 1][1];
+    const calculate2Location =
+      Math.abs((nextLocation[0] as number) - (currentLocation[0] as number)) +
+      Math.abs((nextLocation[1] as number) - (currentLocation[1] as number));
+    distance = distance + calculate2Location;
   }
 
-  return movements
+  return distance;
 }
