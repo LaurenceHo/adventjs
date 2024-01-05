@@ -1,7 +1,14 @@
 export function findFirstRepeated(gifts: number[]) {
-  const firstRepeatedGift = gifts.find((gift, index) => {
-    return gifts.indexOf(gift) !== index
-  })
+  let prevIndex = -1;
+  for (let i = 0; i < gifts.length; i++) {
+    const gift = gifts[i];
+    const found = gifts.findIndex((g, index) => index > i && g === gift);
 
-  return firstRepeatedGift ?? -1
+    if (found > -1) {
+      if (prevIndex === -1 || prevIndex > found) {
+        prevIndex = found;
+      }
+    }
+  }
+  return prevIndex === -1 ? -1 : gifts[prevIndex];
 }
