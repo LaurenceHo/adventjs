@@ -1,23 +1,20 @@
 export function organizeChristmasDinner(dishes: string[][]) {
-  const ingredients = new Map<string, string[]>()
+  let result = [];
+  const ingredientMap = new Map();
 
   for (const dish of dishes) {
-    const dishName = dish[0]
-    const dishIngredients = dish.slice(1)
+    const [dishName, ...ingredients] = dish;
 
-    for (const ingredient of dishIngredients) {
-      if (!ingredients.has(ingredient)) {
-        ingredients.set(ingredient, [])
+    for (const ingredient of ingredients) {
+      if (!ingredientMap.has(ingredient)) {
+        ingredientMap.set(ingredient, [dishName]);
+      } else {
+        ingredientMap.get(ingredient).push(dishName);
       }
-
-      ingredients.get(ingredient)?.push(dishName)
     }
   }
+  const filteredArray = [...ingredientMap.entries()].sort().filter((ing) => ing[1].length > 1);
+  result = filteredArray.map((temp) => [temp[0], temp[1].sort()].flat());
 
-  const organizedDishes = [...ingredients.entries()]
-    .filter(([, dishes]) => dishes.length >= 2)
-    .map(([ingredient, dishes]) => [ingredient, ...dishes.sort()])
-    .sort()
-
-  return organizedDishes
+  return result;
 }
