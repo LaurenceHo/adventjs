@@ -1,21 +1,32 @@
 export function organizeGifts(gifts: string) {
-  let organizedGifts = ''
-  const groups = gifts.match(/\d+\w/g) ?? []
+  let result = '';
+  const giftsArray = gifts.split(/[a-z]/).filter((s) => s !== '');
+  const charactersArray = gifts.split(/[0-9]+/).filter((s) => s !== '');
 
-  for (const group of groups) {
-    const total = +group.slice(0, -1)
-    const gift = group.slice(-1)
+  giftsArray.forEach((g, i) => {
+    const amountOfGift = Number(g);
+    const currentType = charactersArray[i];
 
-    const pallets = total / 50
-    const boxes = (total / 10) % 5
-    const bags = total % 10
+    const pallets = Math.floor(amountOfGift / 50);
+    const boxes = Math.floor((amountOfGift % 50) / 10);
+    const remainingGifts = amountOfGift % 10;
 
-    const palletGifts = `[${gift}]`.repeat(pallets)
-    const boxGifts = `{${gift}}`.repeat(boxes)
-    const bagGifts = `(${gift.repeat(bags)})`.repeat(+(bags > 0))
+    for (let i = 0; i < pallets; i++) {
+      result += `[${currentType}]`;
+    }
 
-    organizedGifts += `${palletGifts}${boxGifts}${bagGifts}`
-  }
+    for (let i = 0; i < boxes; i++) {
+      result += `{${currentType}}`;
+    }
 
-  return organizedGifts
+    if (remainingGifts > 0) {
+      result += '(';
+      for (let i = 0; i < remainingGifts; i++) {
+        result += currentType;
+      }
+      result += ')';
+    }
+  });
+
+  return result;
 }
